@@ -1,0 +1,70 @@
+#!/bin/bash -eu
+#
+# Copyright (c) 2020 SAP SE or an SAP affiliate company. All rights reserved. This file is licensed under the Apache Software License, v. 2 except as noted otherwise in the LICENSE file
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+# poor man's version comparison helper
+function version {
+  printf "1%d%02d%02d\n" $(echo "$1" | sed 's/v//g' | sed -e 's/\./ /g')
+}
+
+minimum_k8s_version="$(cat "$(dirname $0)/../MINIMUM_KUBERNETES_VERSION")"
+
+# fetch all Kubernetes and hyperkube releases
+kubernetes_releases="$(git ls-remote --tags         git@github.com:kubernetes/kubernetes.git | sed -n 's/.*refs\/tags\/\([^-\^]*\)$/\1/p')"
+hyperkube_releases="$(git  ls-remote --tags --heads git@github.com:gardener/hyperkube.git)"
+
+# compute for which versions we have to build an image
+to_build_versions=()
+for release in $kubernetes_releases; do
+  # check if release is large enough
+  if [[ $(version "$minimum_k8s_version") -gt $(version "$release") ]]; then
+    # skipping release as it doesn't match minimum Kubernetes version <minimum_k8s_version>
+    continue
+  fi
+
+  # check if hyperkube release exists already
+  if [ "$(echo "$hyperkube_releases" | grep "$release" | wc -l)" == "1" ]; then
+    # skipping release as tag or branch exists already
+    continue
+  fi
+
+  to_build_versions+=( "$release" )
+done
+
+# loop over each version and build an image
+if (( ${#to_build_versions[@]} )); then
+  for release in ${to_build_versions[@]}; do
+    echo "Must build an image for Kubernetes release $release ..."
+    git checkout -b "release-$release"
+
+    pushd "$(dirname $0)/.." >/dev/null
+    docker build -t "eu.gcr.io/gardener-project/hyperkube:$release" --build-arg=KUBERNETES_VERSION="$release" .
+    docker push     "eu.gcr.io/gardener-project/hyperkube:$release"
+    echo "$release" > KUBERNETES_VERSION
+    git add KUBERNETES_VERSION
+    git commit -m "Release $release"
+    git tag "$release"
+    git push origin "$release"
+    popd >/dev/null
+
+    git checkout master
+    git branch -D "release-$release"
+    echo -e "Succesfully built an image for $release\n"
+  done
+fi
