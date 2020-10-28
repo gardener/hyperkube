@@ -18,8 +18,16 @@ It is not designed in a way to be used directly.
 
 ## How To Build It?
 
+Build image with the version stored in ``KUBERNETES_VERSION``:
+
 ```shell
-docker build --build-arg=KUBERNETES_VERSION=v1.18.2 .
+make docker-image
+```
+
+Build image with a special version:
+
+```shell
+make docker-image KUBERNETES_VERSION=v1.19.0
 ```
 
 ## Limitations
