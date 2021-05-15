@@ -39,7 +39,7 @@ for release in $kubernetes_releases; do
   fi
 
   # check if hyperkube release exists already
-  if [ "$(echo "$hyperkube_releases" | grep "$release" | wc -l)" == "1" ]; then
+  if [ "$(echo "$hyperkube_releases" | grep "$release" | wc -l)" != "0" ]; then
     # skipping release as tag or branch exists already
     continue
   fi
