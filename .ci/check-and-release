@@ -18,6 +18,11 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+if ! which hub > /dev/null; then
+  echo "Can't find 'hub' tool in PATH, please install from https://github.com/github/hub"
+  exit 1
+fi
+
 # poor man's version comparison helper
 function version {
   printf "1%d%02d%02d\n" $(echo "$1" | sed 's/v//g' | sed -e 's/\./ /g')
@@ -61,6 +66,7 @@ if (( ${#to_build_versions[@]} )); then
     git commit -m "Release $release"
     git tag "$release"
     git push origin "$release"
+    hub release create -m $release -m "# [hyperkube]" -m "## Docker Images" -m "hyperkube: \`eu.gcr.io/gardener-project/hyperkube:$release\`" $release
     popd >/dev/null
 
     git checkout master
