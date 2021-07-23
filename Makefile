@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-IMAGE_REPOSITORY   := eu.gcr.io/gardener-project/gardener/hyperkube
+IMAGE_REPOSITORY   := eu.gcr.io/gardener-project/hyperkube
 IMAGE_TAG          := $(shell cat KUBERNETES_VERSION)
 KUBERNETES_VERSION := $(shell cat KUBERNETES_VERSION)
 
