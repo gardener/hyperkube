@@ -43,6 +43,8 @@ It will detect for which versions a new image must be built, build and push it, 
 
 Prerequisites:
 
+* You must use a version of Docker that supports [BuildKit](https://docs.docker.com/develop/develop-images/build_enhancements/).
+* You have to use a multi platform driver for Docker (e.g. by running `docker buildx create --use`).
 * You must be eligible to `git push` tags to this repository.
 * You must configure `gcloud` to authenticate with a valid GCP service account that allows pushing to the Gardener GCR.
   * `gcloud auth activate-service-account --key-file=<path-to-key-file>`
