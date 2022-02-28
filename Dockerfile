@@ -6,16 +6,23 @@ RUN echo "package main\nimport \"time\"\nfunc main() { time.Sleep(time.Hour) }" 
     GOOS=linux go build -o /sleep sleep.go
 
 ### binary downloader
+# Arch specific stages are required to set arg appropriately, see https://github.com/docker/buildx/issues/157#issuecomment-538048500
 
-FROM alpine:3.12 AS builder
+FROM alpine:3.12 AS builder-amd64
+ARG ARCH=amd64
+
+FROM alpine:3.12 AS builder-arm64
+ARG ARCH=arm64
+
+FROM builder-$TARGETARCH as builder
 
 WORKDIR /tmp/hyperkube
 COPY . .
 
 ARG KUBERNETES_VERSION
 
-RUN wget https://storage.googleapis.com/kubernetes-release/release/$KUBERNETES_VERSION/bin/linux/amd64/kubelet && \
-    wget https://storage.googleapis.com/kubernetes-release/release/$KUBERNETES_VERSION/bin/linux/amd64/kubectl && \
+RUN wget https://storage.googleapis.com/kubernetes-release/release/$KUBERNETES_VERSION/bin/linux/$ARCH/kubelet && \
+    wget https://storage.googleapis.com/kubernetes-release/release/$KUBERNETES_VERSION/bin/linux/$ARCH/kubectl && \
     chmod +x kubectl kubelet
 
 ### actual container

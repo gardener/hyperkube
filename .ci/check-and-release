@@ -57,11 +57,9 @@ if (( ${#to_build_versions[@]} )); then
   for release in ${to_build_versions[@]}; do
     echo "Must build an image for Kubernetes release $release ..."
     git checkout -b "release-$release"
-
     pushd "$(dirname $0)/.." >/dev/null
-    docker build -t "eu.gcr.io/gardener-project/hyperkube:$release" --build-arg=KUBERNETES_VERSION="$release" .
-    docker push     "eu.gcr.io/gardener-project/hyperkube:$release"
     echo "$release" > KUBERNETES_VERSION
+    make docker-push
     git add KUBERNETES_VERSION
     git commit -m "Release $release"
     git tag "$release"

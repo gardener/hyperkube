@@ -15,6 +15,7 @@
 IMAGE_REPOSITORY   := eu.gcr.io/gardener-project/hyperkube
 IMAGE_TAG          := $(shell cat KUBERNETES_VERSION)
 KUBERNETES_VERSION := $(shell cat KUBERNETES_VERSION)
+ARCH               := $(shell uname -m | sed 's/x86_64/amd64/')
 
 .PHONY: build
 build: docker-image
@@ -24,7 +25,7 @@ release: build docker-login docker-push
 
 .PHONY: docker-image
 docker-image:
-	@docker build -t $(IMAGE_REPOSITORY):$(IMAGE_TAG) --build-arg=KUBERNETES_VERSION=$(KUBERNETES_VERSION) --rm .
+	@docker buildx build -t $(IMAGE_REPOSITORY):$(IMAGE_TAG) --build-arg=KUBERNETES_VERSION=$(KUBERNETES_VERSION) --platform linux/$(ARCH) --load .
 
 .PHONY: docker-login
 docker-login:
@@ -32,5 +33,4 @@ docker-login:
 
 .PHONY: docker-push
 docker-push:
-	@if ! docker images $(IMAGE_REPOSITORY) | awk '{ print $$2 }' | grep -q -F $(IMAGE_TAG); then echo "$(IMAGE_REPOSITORY) version $(IMAGE_TAG) is not yet built. Please run 'make docker-image'"; false; fi
-	@gcloud docker -- push $(IMAGE_REPOSITORY):$(IMAGE_TAG)
+	@docker buildx build -t $(IMAGE_REPOSITORY):$(IMAGE_TAG) --build-arg=KUBERNETES_VERSION=$(KUBERNETES_VERSION) --platform linux/amd64,linux/arm64 --push .
