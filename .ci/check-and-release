@@ -62,6 +62,10 @@ if (( ${#to_build_versions[@]} )); then
     make docker-push
     git add KUBERNETES_VERSION
     git commit -m "Release $release"
+    if [[ ! -z "${BUILD_CD:-}" ]]; then
+      commit="$(git rev-parse HEAD)"
+      .ci/create-cd "${release}" "${commit}"
+    fi
     git tag "$release"
     git push origin "$release"
     hub release create -m $release -m "# [hyperkube]" -m "## Docker Images" -m "hyperkube: \`eu.gcr.io/gardener-project/hyperkube:$release\`" $release
