@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing hub
+
+gardener-ci config model_element --cfg-type github --cfg-name github_com --key credentials.private_key --output-file "${HOME}/.ssh/id_rsa"
+chmod 600 "${HOME}/.ssh/id_rsa"
+
+"$(dirname $0)/write_docker_cfg.py"
+
+# final setup for buildx
+docker buildx create --use
+
+BUILD_CD="yes" "$(dirname $0)/check-and-release"

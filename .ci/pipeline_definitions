@@ -1,0 +1,9 @@
+hyperkube:
+  jobs:
+    build-hyperkube-images:
+      repo:
+        trigger: false
+      steps:
+        build-and-publish-hyperkube:
+          execute: build-on-ci
+          privilege_mode: privileged
