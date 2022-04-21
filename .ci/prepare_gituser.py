@@ -24,4 +24,4 @@ with open(os.path.join(home, 'github_email'), 'wt') as email_file:
     email_file.write(user_credentials.email_address())
 
 with open(os.path.join(home, 'github_password'), 'wt') as pw_file:
-    email_file.write(user_credentials.passwd())
+    pw_file.write(user_credentials.passwd())
