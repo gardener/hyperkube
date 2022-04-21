@@ -12,6 +12,8 @@ apk add make
 
 gardener-ci config model_element --cfg-type github --cfg-name github_com --key credentials.private_key --output-file "${HOME}/.ssh/id_rsa"
 chmod 600 "${HOME}/.ssh/id_rsa"
+git config --global user.name "$(gardener-ci config model_element --cfg-type github --cfg-name github_com --key credentials.username)"
+git config --global user.email "$(gardener-ci config model_element --cfg-type github --cfg-name github_com --key credentials.email_address)"
 
 "${repo_dir}/.ci/write_docker_cfg.py"
 
