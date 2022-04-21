@@ -13,7 +13,7 @@ apk add make
 "${repo_dir}/.ci/prepare_gituser.py"
 chmod 600 "${HOME}/.ssh/id_rsa"
 username=$(cat ${HOME}/github_user)
-user_passwd=$(cat ${HOME}/github_password)
+user_token=$(cat ${HOME}/github_token)
 user_email=$(cat ${HOME}/github_email)
 
 git config --global user.email "${username}"
@@ -24,4 +24,4 @@ git config --global user.name "${user_email}"
 # final setup for buildx
 docker buildx create --use
 
-BUILD_CD="yes" GITHUB_USER="${username}" GITHUB_PASSWORD="${user_passwd}" "${repo_dir}/.ci/check-and-release"
+BUILD_CD="yes" GITHUB_USER="${username}" GITHUB_TOKEN="${user_token}" "${repo_dir}/.ci/check-and-release"

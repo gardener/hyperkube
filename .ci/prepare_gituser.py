@@ -23,5 +23,5 @@ with open(os.path.join(home, 'github_user'), 'wt') as user_file:
 with open(os.path.join(home, 'github_email'), 'wt') as email_file:
     email_file.write(user_credentials.email_address())
 
-with open(os.path.join(home, 'github_password'), 'wt') as pw_file:
-    pw_file.write(user_credentials.passwd())
+with open(os.path.join(home, 'github_token'), 'wt') as pw_file:
+    pw_file.write(user_credentials.auth_token())
