@@ -68,6 +68,7 @@ if (( ${#to_build_versions[@]} )); then
     fi
     git tag "$release"
     git push origin "$release"
+    sleep(30)
     hub release create -m $release -m "# [hyperkube]" -m "## Docker Images" -m "hyperkube: \`eu.gcr.io/gardener-project/hyperkube:$release\`" $release
     popd >/dev/null
 
