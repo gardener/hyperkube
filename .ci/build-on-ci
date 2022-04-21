@@ -13,9 +13,9 @@ apk add make
 gardener-ci config model_element --cfg-type github --cfg-name github_com --key credentials.private_key --output-file "${HOME}/.ssh/id_rsa"
 chmod 600 "${HOME}/.ssh/id_rsa"
 
-"${repo_dir}/write_docker_cfg.py"
+"${repo_dir}/.ci/write_docker_cfg.py"
 
 # final setup for buildx
 docker buildx create --use
 
-BUILD_CD="yes" "${repo_dir}/check-and-release"
+BUILD_CD="yes" "${repo_dir}/.ci/check-and-release"
