@@ -10,14 +10,18 @@ cd $repo_dir
 apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing hub
 apk add make
 
-gardener-ci config model_element --cfg-type github --cfg-name github_com --key credentials.private_key --output-file "${HOME}/.ssh/id_rsa"
+"${repo_dir}/.ci/prepare_gituser.py"
 chmod 600 "${HOME}/.ssh/id_rsa"
-git config --global user.name "$(gardener-ci config model_element --cfg-type github --cfg-name github_com --key credentials.username)"
-git config --global user.email "$(gardener-ci config model_element --cfg-type github --cfg-name github_com --key credentials.email_address)"
+username=$(cat ${HOME}/github_user)
+user_passwd=$(cat ${HOME}/github_password)
+user_email=$(cat ${HOME}/github_email)
+
+git config --global user.email "${username}"
+git config --global user.name "${user_email}"
 
 "${repo_dir}/.ci/write_docker_cfg.py"
 
 # final setup for buildx
 docker buildx create --use
 
-BUILD_CD="yes" "${repo_dir}/.ci/check-and-release"
+BUILD_CD="yes" GITHUB_USER="${username}" GITHUB_PASSWORD="${user_passwd}" "${repo_dir}/.ci/check-and-release"
