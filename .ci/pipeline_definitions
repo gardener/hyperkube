@@ -7,3 +7,6 @@ hyperkube:
         build-and-publish-hyperkube:
           execute: build-on-ci
           privilege_mode: privileged
+      traits:
+        cronjob:
+          interval: '1h'
