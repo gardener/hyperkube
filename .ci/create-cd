@@ -4,10 +4,17 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-if ! which component-cli > /dev/null; then
-  echo "Can't find 'component-cli' PATH. See https://github.com/gardener/component-cli for information on how to install it."
-  exit 1
-fi
+# set up component-cli
+TEMP_DIR="$(mktemp -d)"
+FILE_NAME="componentcli-linux-amd64"
+OUT_FILE="${TEMP_DIR}/${FILE_NAME}.gz"
+curl -L https://github.com/gardener/component-cli/releases/latest/download/componentcli-linux-amd64.gz -o "${OUT_FILE}"
+gzip -d "${OUT_FILE}"
+chmod +x "${TEMP_DIR}/${FILE_NAME}"
+mv "${TEMP_DIR}/${FILE_NAME}" /usr/bin/component-cli
+# as of time of writing, we have a "replacement" component-cli in place in the job-image that takes precedence since it is
+# found first in $PATH. Therefore we have to update $PATH as well here
+export PATH="/usr/bin:${PATH}"
 
 VERSION="$1"
 COMMIT="$2"
