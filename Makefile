@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-IMAGE_REPOSITORY   := eu.gcr.io/gardener-project/hyperkube
+IMAGE_REPOSITORY   := europe-docker.pkg.dev/gardener-project/releases/hyperkube
 IMAGE_TAG          := $(shell cat KUBERNETES_VERSION)
 KUBERNETES_VERSION := $(shell cat KUBERNETES_VERSION)
 ARCH               := $(shell uname -m | sed 's/x86_64/amd64/')

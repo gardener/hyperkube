@@ -19,7 +19,9 @@ user_email=$(cat ${HOME}/github_email)
 git config --global user.email "${username}"
 git config --global user.name "${user_email}"
 
-"${repo_dir}/.ci/write_docker_cfg.py"
+"${repo_dir}/.ci/write_docker_cfg"
+
+launch-dockerd.sh
 
 # final setup for buildx
 docker buildx create --use
