@@ -7,6 +7,8 @@ hyperkube:
         build-and-publish-hyperkube:
           execute: build-on-ci
           privilege_mode: privileged
+        replicate-images-to-gcr:
+          execute: replicate_images_to_gcr.py
       traits:
         cronjob:
           interval: '1h'
