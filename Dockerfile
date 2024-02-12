@@ -21,8 +21,8 @@ COPY . .
 
 ARG KUBERNETES_VERSION
 
-RUN wget https://storage.googleapis.com/kubernetes-release/release/$KUBERNETES_VERSION/bin/linux/$ARCH/kubelet && \
-    wget https://storage.googleapis.com/kubernetes-release/release/$KUBERNETES_VERSION/bin/linux/$ARCH/kubectl && \
+RUN wget https://dl.k8s.io/release/$KUBERNETES_VERSION/bin/linux/$ARCH/kubelet && \
+    wget https://dl.k8s.io/release/$KUBERNETES_VERSION/bin/linux/$ARCH/kubectl && \
     chmod +x kubectl kubelet
 
 ### actual container
