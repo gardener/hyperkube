@@ -27,7 +27,7 @@ make docker-image
 Build image with a special version:
 
 ```shell
-make docker-image KUBERNETES_VERSION=v1.19.0
+make docker-image KUBERNETES_VERSION=v1.29.1
 ```
 
 ## Limitations

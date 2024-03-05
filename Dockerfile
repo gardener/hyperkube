@@ -15,15 +15,14 @@ FROM alpine:3.19 AS builder-arm64
 ARG ARCH=arm64
 
 FROM builder-$TARGETARCH as builder
+ARG KUBERNETES_VERSION
 
 WORKDIR /tmp/hyperkube
 COPY . .
 
-ARG KUBERNETES_VERSION
-
-RUN wget https://storage.googleapis.com/kubernetes-release/release/$KUBERNETES_VERSION/bin/linux/$ARCH/kubelet && \
-    wget https://storage.googleapis.com/kubernetes-release/release/$KUBERNETES_VERSION/bin/linux/$ARCH/kubectl && \
-    chmod +x kubectl kubelet
+RUN apk add --update --no-cache bash cosign && \
+    scripts/get-k8s-binary.sh kubelet $KUBERNETES_VERSION linux/$ARCH && \
+    scripts/get-k8s-binary.sh kubectl $KUBERNETES_VERSION linux/$ARCH
 
 ### actual container
 
