@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 #
-# Downloads Kubernetes binaries from dl.k8s.io
+# SPDX-FileCopyrightText: SAP SE or an SAP affiliate company and Gardener contributors
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# The following script downloads Kubernetes binaries from dl.k8s.io
 #
 # Example usage:
 #
@@ -13,7 +17,7 @@ BASE_URL=https://dl.k8s.io/release/
 function _main() {
     if [ $# -ne 3 ]; then
         echo "Usage: $0 <binary> <version> <os/arch>"
-        exit 64
+        exit 64  # EX_USAGE
     fi
 
     local _binary="${1}"
