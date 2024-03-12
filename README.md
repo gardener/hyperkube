@@ -1,4 +1,5 @@
 # hyperkube
+[![REUSE status](https://api.reuse.software/badge/github.com/gardener/hyperkube)](https://api.reuse.software/info/github.com/gardener/hyperkube)
 
 As part of [kubernetes/kubernetes#88676](https://github.com/kubernetes/kubernetes/pull/88676), the `hyperkube` image is be removed from the Kubernetes releases.
 The first release not producing a `hyperkube` image anymore is v1.19.
