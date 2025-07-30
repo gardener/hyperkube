@@ -14,7 +14,7 @@ ARG ARCH=amd64
 FROM alpine:3.20 AS builder-arm64
 ARG ARCH=arm64
 
-FROM builder-$TARGETARCH as builder
+FROM builder-$TARGETARCH AS builder
 ARG KUBERNETES_VERSION
 
 WORKDIR /tmp/hyperkube
