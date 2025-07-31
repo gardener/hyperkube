@@ -31,30 +31,6 @@ Build image with a special version:
 make docker-image KUBERNETES_VERSION=v1.29.1
 ```
 
-## Limitations
-
-Currently, there is no automatism that would build the images on new releases of Kubernetes.
-The reasons are that the CI system does not support the requirements out-of-the-box yet for scripts in the `.ci` folder:
-
-* No (easy) possibility to push branch or tags
-* No (easy) possibility to build container images
-
-Therefore, the following script must ran manually.
-It will detect for which versions a new image must be built, build and push it, and push the Git tag.
-
-Prerequisites:
-
-* You must use a version of Docker that supports [BuildKit](https://docs.docker.com/develop/develop-images/build_enhancements/).
-* You have to use a multi platform driver for Docker (e.g. by running `docker buildx create --use`).
-* You must be eligible to `git push` tags to this repository.
-* You must configure `gcloud` to authenticate with a valid GCP service account that allows pushing to the Gardener GCR.
-  * `gcloud auth activate-service-account --key-file=<path-to-key-file>`
-  * `gcloud auth configure-docker`
-
-```shell
-.ci/check-and-release
-```
-
 ## Learn More!
 
 Please find further resources about out project here:
