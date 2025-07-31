@@ -1,0 +1,30 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: [
+    "config:recommended",
+    ":semanticCommitsDisabled",
+    "regexManagers:githubActionsVersions",
+    "group:monorepos"
+  ],
+  labels: ["kind/enhancement"],
+  // Add PR footer with empty release note by default.
+  prFooter: "**Release note**:\n```other dependency\nNONE\n```",
+  packageRules: [
+    {
+      // Group github-actions in one PR.
+      groupName: "github-actions",
+      matchManagers: ["github-actions"]
+    },
+    {
+      // Add PR footer with release notes for docker releases.
+      "matchDatasources": ["docker"],
+      "matchFileNames": ["imagevector/**"],
+      "prFooter": "```other dependency\nThe `{{depName}}` image has been updated to `{{newVersion}}`.\n```"
+    },
+    {
+      // Add PR footer with release notes link for github-releases.
+      "matchDatasources": ["github-releases"],
+      "matchFileNames": ["imagevector/**"],
+      "prFooter": "```other dependency\nThe `{{depName}}` image has been updated to `{{newVersion}}`. [Release Notes](https://github.com/{{depName}}/releases/tag/{{newVersion}})\n```"
+    }  ]
+}
