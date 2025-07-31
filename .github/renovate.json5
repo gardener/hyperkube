@@ -16,9 +16,15 @@
       matchManagers: ["github-actions"]
     },
     {
+      // Add PR footer with release notes for docker releases.
+      "matchDatasources": ["docker"],
+      "matchFileNames": ["imagevector/**"],
+      "prFooter": "```other dependency\nThe `{{depName}}` image has been updated to `{{newVersion}}`.\n```"
+    },
+    {
       // Add PR footer with release notes link for github-releases.
-      matchDatasources: ["github-releases"],
-      prFooter: "**Release note**:\n```other dependency\n`{{depName}}` has been updated to `{{newVersion}}`.```"
-    }
-  ]
+      "matchDatasources": ["github-releases"],
+      "matchFileNames": ["imagevector/**"],
+      "prFooter": "```other dependency\nThe `{{depName}}` image has been updated to `{{newVersion}}`. [Release Notes](https://github.com/{{depName}}/releases/tag/{{newVersion}})\n```"
+    }  ]
 }

@@ -1,6 +1,5 @@
 ### sleep go program that allows to instantiate a container to use `docker cp` for coping the binaries out of it
 
-# renovate: datasource=docker depName=golang
 FROM golang:1.24.5 AS golang
 
 RUN echo "package main\nimport \"time\"\nfunc main() { time.Sleep(time.Hour) }" > sleep.go && \
@@ -8,11 +7,9 @@ RUN echo "package main\nimport \"time\"\nfunc main() { time.Sleep(time.Hour) }" 
 
 ### binary downloader
 # Arch specific stages are required to set arg appropriately, see https://github.com/docker/buildx/issues/157#issuecomment-538048500
-# renovate: datasource=docker depName=alpine
 FROM alpine:3.22 AS builder-amd64
 ARG ARCH=amd64
 
-# renovate: datasource=docker depName=alpine
 FROM alpine:3.22 AS builder-arm64
 ARG ARCH=arm64
 
