@@ -1,0 +1,33 @@
+# See the OWNERS docs at https://go.k8s.io/owners
+
+aliases:
+  hyperkube-reviewers:
+  - acumino
+  - ary1992
+  - ialidzhikov
+  - Kostov6
+  - LucaBernstein
+  - marc1404
+  - mimiteto
+  - oliver-goetz
+  - plkokanov
+  - rfranzke
+  - ScheererJ
+  - shafeeqes
+  - timuthy
+  - tobschli
+  hyperkube-approvers:
+  - acumino
+  - ary1992
+  - ialidzhikov
+  - Kostov6
+  - LucaBernstein
+  - marc1404
+  - mimiteto
+  - oliver-goetz
+  - plkokanov
+  - rfranzke
+  - ScheererJ
+  - shafeeqes
+  - timuthy
+  - tobschli

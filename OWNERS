@@ -1,0 +1,6 @@
+# See the OWNERS docs at https://go.k8s.io/owners
+
+reviewers:
+- hyperkube-reviewers
+approvers:
+- hyperkube-approvers
