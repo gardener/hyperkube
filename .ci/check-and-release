@@ -8,8 +8,8 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-if ! which hub > /dev/null; then
-  echo "Can't find 'hub' tool in PATH, please install from https://github.com/github/hub"
+if ! which gh > /dev/null; then
+  echo "Can't find 'github-cli' tool in PATH; install from https://github.com/cli/cli"
   exit 1
 fi
 
@@ -21,8 +21,13 @@ function version {
 minimum_k8s_version="$(cat "$(dirname $0)/../MINIMUM_KUBERNETES_VERSION")"
 
 # fetch all Kubernetes and hyperkube releases
-kubernetes_releases="$(git ls-remote --tags         git@github.com:kubernetes/kubernetes.git | sed -n 's/.*refs\/tags\/\([^-\^]*\)$/\1/p')"
-hyperkube_releases="$(git  ls-remote --tags --heads git@github.com:gardener/hyperkube.git)"
+kubernetes_releases="$(
+  git ls-remote --tags https://github.com/kubernetes/kubernetes.git \
+  | sed -n 's/.*refs\/tags\/\([^-\^]*\)$/\1/p'
+)"
+hyperkube_releases="$(
+  git ls-remote --tags --heads https://github.com/gardener/hyperkube.git
+)"
 
 # compute for which versions we have to build an image
 to_build_versions=()
@@ -55,7 +60,15 @@ if (( ${#to_build_versions[@]} )); then
     git tag "$release"
     git push origin "$release"
     sleep 30
-    hub release create -m $release -m "# [hyperkube]" -m "## Docker Images" -m "hyperkube: \`europe-docker.pkg.dev/gardener-project/releases/hyperkube:$release\`" $release
+    read -r -d '' release_notes <<-EOF
+      # [hyperkube]
+      ## Container Images
+      europe-docker.pkg.dev/gardener-project/releases/hyperkube:$release
+EOF
+    gh \
+        release create  \
+        -n "${release_notes}" \
+        $release
     popd >/dev/null
 
     git checkout master
