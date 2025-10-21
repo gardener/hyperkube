@@ -1,0 +1,30 @@
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *'
+
+jobs:
+  build-and-publish-hyperkube-images:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: gardener/cc-utils/.github/actions/oci-auth@master
+        with:
+          oci-image-reference: europe-docker.pkg.dev/gardener-project/releases/hyperkube
+      - uses: actions/create-github-app-token@v2
+        id: token
+        with:
+          app-id: ${{ vars.GARDENER_GITHUB_ACTIONS_APP_ID }}
+          private-key: ${{ secrets.GARDENER_GITHUB_ACTIONS_PRIVATE_KEY }}
+      - uses: gardener/cc-utils/.github/actions/trusted-checkout@master
+        with:
+          token: ${{ steps.token.outputs.token }}
+      - uses: gardener/cc-utils/.github/actions/setup-git-identity@master
+      - name: build-and-publish-hyperkube-images
+        shell: bash
+        run: |
+          set -euo pipefail
+          .ci/check-and-release
