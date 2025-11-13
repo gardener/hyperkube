@@ -76,6 +76,6 @@ europe-docker.pkg.dev/gardener-project/releases/hyperkube:$release
         "${release}"
     popd >/dev/null
     echo "Release $release created within GitHub"
-    echo -e "Succesfully built an image for $release\n"
+    echo -e "Successfully built an image for $release\n"
   done
 fi
