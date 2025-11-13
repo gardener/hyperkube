@@ -39,7 +39,7 @@ for release in $kubernetes_releases; do
   fi
 
   # check if hyperkube release exists already
-  if [ "$(echo "$hyperkube_releases" | grep "$release" | wc -l)" != "0" ]; then
+  if [ "$(echo "$hyperkube_releases" | grep -c "$release")" != "0" ]; then
     # skipping release as tag or branch exists already
     continue
   fi
@@ -56,20 +56,26 @@ if (( ${#to_build_versions[@]} )); then
     echo "$release" > KUBERNETES_VERSION
     make docker-push
     git add KUBERNETES_VERSION
+    echo "Creating $release tag"
     git commit -m "Release $release"
     git tag "$release"
     git push origin "$release"
     sleep 30
-    read -r -d '' release_notes <<-EOF
-      # [hyperkube]
-      ## Container Images
-      europe-docker.pkg.dev/gardener-project/releases/hyperkube:$release
-EOF
+    echo "Creating $release within GitHub"
+#     read -r -d '' release_notes <<-EOF
+#       # [hyperkube]
+#       ## Container Images
+#       europe-docker.pkg.dev/gardener-project/releases/hyperkube:$release
+# EOF
     gh \
         release create  \
-        -n "${release_notes}" \
-        $release
+        -n "# [hyperkube]
+## Container Images
+europe-docker.pkg.dev/gardener-project/releases/hyperkube:$release
+" \
+        "${release}"
     popd >/dev/null
+    echo "Release $release created within GitHub"
 
     git checkout master
     git branch -D "release-$release"
