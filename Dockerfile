@@ -7,10 +7,10 @@ RUN echo "package main\nimport \"time\"\nfunc main() { time.Sleep(time.Hour) }" 
 
 ### binary downloader
 # Arch specific stages are required to set arg appropriately, see https://github.com/docker/buildx/issues/157#issuecomment-538048500
-FROM alpine:3.22 AS builder-amd64
+FROM alpine:3.23 AS builder-amd64
 ARG ARCH=amd64
 
-FROM alpine:3.22 AS builder-arm64
+FROM alpine:3.23 AS builder-arm64
 ARG ARCH=arm64
 
 FROM builder-$TARGETARCH AS builder
