@@ -8,17 +8,18 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
-      contents: write
 
     steps:
       - uses: gardener/cc-utils/.github/actions/oci-auth@master
         with:
           oci-image-reference: europe-docker.pkg.dev/gardener-project/releases/hyperkube
-      - uses: actions/create-github-app-token@v2
+      - uses: gardener/cc-utils/.github/actions/github-auth@master
         id: token
         with:
-          app-id: ${{ vars.GARDENER_GITHUB_ACTIONS_APP_ID }}
-          private-key: ${{ secrets.GARDENER_GITHUB_ACTIONS_PRIVATE_KEY }}
+          token-server: ${{ vars.FEDERATED_GITHUB_ACCESS_TOKEN_SERVER }}
+          repositories: ${{ github.event.repository.name }}
+          permissions: |
+            contents: write
       - uses: gardener/cc-utils/.github/actions/trusted-checkout@master
         with:
           token: ${{ steps.token.outputs.token }}
