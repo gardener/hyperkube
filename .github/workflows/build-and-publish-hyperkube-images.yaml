@@ -7,22 +7,14 @@ jobs:
   build-and-publish-hyperkube-images:
     runs-on: ubuntu-latest
     permissions:
+      contents: write
       id-token: write
 
     steps:
       - uses: gardener/cc-utils/.github/actions/oci-auth@master
         with:
           oci-image-reference: europe-docker.pkg.dev/gardener-project/releases/hyperkube
-      - uses: gardener/cc-utils/.github/actions/github-auth@master
-        id: token
-        with:
-          token-server: ${{ vars.FEDERATED_GITHUB_ACCESS_TOKEN_SERVER }}
-          repositories: ${{ github.event.repository.name }}
-          permissions: |
-            contents: write
       - uses: gardener/cc-utils/.github/actions/trusted-checkout@master
-        with:
-          token: ${{ steps.token.outputs.token }}
       - uses: gardener/cc-utils/.github/actions/setup-git-identity@master
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3.7.0
