@@ -8,10 +8,6 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-export GARDENER_SUPPORTED_KUBERNETES_VERSIONS_URL="https://raw.githubusercontent.com/gardener/gardener/refs/heads/master/supported-kubernetes-versions.yaml"
-export CURRENT_DATE
-CURRENT_DATE="$(date +%Y-%m-%d)"
-
 if ! which gh > /dev/null; then
   echo "Can't find 'github-cli' tool in PATH; install from https://github.com/cli/cli"
   exit 1
@@ -22,18 +18,7 @@ function version {
   printf "1%d%02d%02d\n" $(echo "$1" | sed 's/v//g' | sed -e 's/\./ /g')
 }
 
-function lowest_version() {
-  printf '%s\n' "$@" | sort -V | head -1
-}
-
-function min_supported_version() {
-  fpath=/tmp/supported-kubernetes-versions.yaml 
-  curl -sLo "${fpath}" "$GARDENER_SUPPORTED_KUBERNETES_VERSIONS_URL"
-  echo "v$(yq e '.versions[] | select(.endDate >= "'"${CURRENT_DATE}"'") | .version' "${fpath}" | sort -V | head -1).0"
-}
-
-minimum_k8s_version="$(min_supported_version)"
-echo "Minimum Kubernetes version to build an image for: $minimum_k8s_version"
+minimum_k8s_version="$(tail -1 "$(dirname $0)/../MINIMUM_KUBERNETES_VERSION")"
 
 # fetch all Kubernetes and hyperkube releases
 kubernetes_releases="$(
