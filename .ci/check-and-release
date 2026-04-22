@@ -18,7 +18,8 @@ function version {
   printf "1%d%02d%02d\n" $(echo "$1" | sed 's/v//g' | sed -e 's/\./ /g')
 }
 
-minimum_k8s_version="$(tail -1 "$(dirname $0)/../MINIMUM_KUBERNETES_VERSION")"
+# Minimum Kubernetes version supported by this project.
+MINIMUM_K8S_VERSION="v1.19.0"
 
 # fetch all Kubernetes and hyperkube releases
 kubernetes_releases="$(
@@ -33,7 +34,7 @@ hyperkube_releases="$(
 to_build_versions=()
 for release in $kubernetes_releases; do
   # check if release is large enough
-  if [[ $(version "$minimum_k8s_version") -gt $(version "$release") ]]; then
+  if [[ $(version "$MINIMUM_K8S_VERSION") -gt $(version "$release") ]]; then
     # skipping release as it doesn't match minimum Kubernetes version <minimum_k8s_version>
     continue
   fi
