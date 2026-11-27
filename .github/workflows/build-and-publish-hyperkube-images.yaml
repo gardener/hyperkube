@@ -11,11 +11,11 @@ jobs:
       id-token: write
 
     steps:
-      - uses: gardener/cc-utils/.github/actions/oci-auth@d478850afa1a7e0f9deb710e4d44eb0a2d8dce07 # 1.2881.0
+      - uses: gardener/cc-utils/.github/actions/oci-auth@00522ef3e8504bc7be46394a239a390f112336f6 # 1.2883.0
         with:
           oci-image-reference: europe-docker.pkg.dev/gardener-project/releases/hyperkube
-      - uses: gardener/cc-utils/.github/actions/trusted-checkout@d478850afa1a7e0f9deb710e4d44eb0a2d8dce07 # 1.2881.0
-      - uses: gardener/cc-utils/.github/actions/setup-git-identity@d478850afa1a7e0f9deb710e4d44eb0a2d8dce07 # 1.2881.0
+      - uses: gardener/cc-utils/.github/actions/trusted-checkout@00522ef3e8504bc7be46394a239a390f112336f6 # 1.2883.0
+      - uses: gardener/cc-utils/.github/actions/setup-git-identity@00522ef3e8504bc7be46394a239a390f112336f6 # 1.2883.0
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4.2.0
       - name: Set up Docker Buildx
